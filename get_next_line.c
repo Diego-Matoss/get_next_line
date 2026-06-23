@@ -42,8 +42,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	size_t		s1_len;
 	size_t		s2_len;
 
-	if (!s2 || !s1)
+	if (!s2)
 		return (NULL);
+	if (!s1)
+		s1 = "";
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
 	str_len = s1_len + s2_len;
@@ -78,23 +80,21 @@ char    *get_next_line(int fd)
 	ssize_t     bytes_read;
 	char		buffer[BUFFER_SIZE + 1];
 
-	line = "";
+	line = NULL;
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
-	buffer[BUFFER_SIZE] = '\0';
+	buffer[bytes_read] = '\0';
 	while (bytes_read > 0 && !ft_strchr(buffer, '\n', bytes_read))
 	{
 		line = ft_strjoin(line, buffer);
 		// printf("%s\n", line);
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		buffer[BUFFER_SIZE] = '\0';
+		buffer[bytes_read] = '\0';
 	}
 	return (line);
 }
 
 int main(void)
 {
-	printf("%s\n", get_next_line(0));
-	printf("%s\n", get_next_line(0));
 	printf("%s\n", get_next_line(0));
 	return (0);
 }
