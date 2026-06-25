@@ -16,60 +16,50 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	unsigned char	*destination;
-	unsigned char	*source;
-	size_t			i;
-
-	if (!dest && !src)
-		return (NULL);
-	destination = (unsigned char *)dest;
-	source = (unsigned char *)src;
-	i = 0;
-	while (i < n)
-	{
-		destination[i] = source[i];
-		i++;
-	}
-	return (destination);
-}
-
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char		*str;
-	size_t		str_len;
-	size_t		s1_len;
-	size_t		s2_len;
+	size_t		i;
+	size_t		j;
 
 	if (!s2)
 		return (NULL);
 	if (!s1)
 		s1 = "";
-	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
-	str_len = s1_len + s2_len;
-	str = malloc(str_len + 1);
+	str = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!str)
 		return (NULL);
-	ft_memcpy(str, s1, s1_len);
-	ft_memcpy(str + s1_len, s2, s2_len + 1);
-	return (str);
-}
-int ft_strchr(char *str, char c, ssize_t bytes_read)
-{
-	ssize_t	i;
-
-	if (!str)
-		return (0);
 	i = 0;
-	while (i < bytes_read)
+	j = 0;
+	while (s1[i])
 	{
-		if (str[i] == c)
-			return (1);
+		str[i] = s1[i];
 		i++;
 	}
-	return (0);
+	while (s2[j])
+	{
+		str[i] = s2[j];
+		i++;
+		j++;
+	}
+	return (str[i] = '\0', str);
+}
+char	*ft_strchr(const char *s, int c)
+{
+	int		i;
+	char	*str;
+
+	i = 0;
+	str = (char *)s;
+	while (str[i])
+	{
+		if (str[i] == (char)c)
+			return (&str[i]);
+		i++;
+	}
+	if ((char)c == '\0')
+		return (&str[i]);
+	return (NULL);
 }
 
 #include <stdio.h>
@@ -77,18 +67,28 @@ char    *get_next_line(int fd)
 {
 	// static char *stash;
 	char        *line;
+	char		*tmp;
 	ssize_t     bytes_read;
 	char		buffer[BUFFER_SIZE + 1];
 
 	line = NULL;
-	bytes_read = read(fd, buffer, BUFFER_SIZE);
-	buffer[bytes_read] = '\0';
-	while (bytes_read > 0 && !ft_strchr(buffer, '\n', bytes_read))
+	bytes_read = 1;
+	while (bytes_read > 0)
 	{
-		line = ft_strjoin(line, buffer);
-		// printf("%s\n", line);
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
+		{
+			free(line);
+			return (NULL);
+		}
 		buffer[bytes_read] = '\0';
+		if (bytes_read == 0)
+			break ;
+		tmp = line;
+		line = ft_strjoin(line, buffer);
+		free(tmp);
+		if (ft_strchr(buffer, '\n'))
+			break ;
 	}
 	return (line);
 }
