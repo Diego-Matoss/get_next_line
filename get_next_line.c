@@ -1,14 +1,11 @@
 #include "get_next_line.h"
 
-char	*get_next_line(int fd)
+static char	*fill_stash(int fd, char *stash)
 {
-	static char	*stash;
 	char		*tmp;
-	ssize_t		bytes_read;
 	char		buffer[BUFFER_SIZE + 1];
+	ssize_t		bytes_read;
 
-	if (!stash)
-		stash = NULL;
 	bytes_read = 1;
 	while (bytes_read > 0)
 	{
@@ -26,15 +23,31 @@ char	*get_next_line(int fd)
 		free(tmp);
 		if (!stash)
 			return (NULL);
-		if (ft_strchr(buffer, '\n'))
+		if (ft_strchr(stash, '\n'))
 			break ;
 	}
+	return (stash);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*stash;
+
+	if (!stash)
+		stash = NULL;
+	stash = fill_stash(fd, stash);
 	return (stash);
 }
 
 #include <stdio.h>
 int main(void)
 {
-	printf("%s", get_next_line(0));
+	char	*linea;
+	char	*linea2;
+	linea = get_next_line(0);
+	printf("%s", linea);
+	free(linea);
+	linea2 = get_next_line(0);
+	printf("%s", linea2);
 	return (0);
 }
