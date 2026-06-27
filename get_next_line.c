@@ -33,7 +33,6 @@ static char	*extract_line(char *stash)
 {
 	char	*line;
 	size_t	i;
-	size_t	j;
 
 	if (!stash || stash[0] == '\0')
 		return (NULL);
@@ -42,16 +41,7 @@ static char	*extract_line(char *stash)
 		i++;
 	if (stash[i] == '\n')
 		i++;
-	line = malloc(sizeof(char) * (i + 1));
-	if (!line)
-		return (NULL);
-	j = 0;
-	while (j < i)
-	{
-		line[j] = stash[j];
-		j++;
-	}
-	line[j] = '\0';
+	line = ft_substr(stash, 0, i);
 	return (line);
 }
 
@@ -59,26 +49,16 @@ static char	*save_leftover(char *stash)
 {
 	char	*new_stash;
 	size_t	i;
-	size_t	j;
 
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
-	i++;
+		i++;
 	if (stash[i] == '\0')
 	{
 		free(stash);
 		return (NULL);
 	}
-	i++;
-	new_stash = malloc(sizeof(char) * (ft_strlen(stash) - i + 1));
-	j = 0;
-	while (stash[i])
-	{
-		new_stash[j] = stash[i];
-		j++;
-		i++;
-	}
-	new_stash[j] = '\0';
+	new_stash = ft_substr(stash, i + 1, ft_strlen(stash) - i);
 	free(stash);
 	return (new_stash);
 }
@@ -88,10 +68,22 @@ char	*get_next_line(int fd)
 	static char	*stash;
 	char		*line;
 
-	if (!stash)
-		stash = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	stash = fill_stash(fd, stash);
+	if (!stash || stash[0] == '\0')
+	{
+		free (stash);
+		stash = NULL;
+		return (NULL);
+	}
 	line = extract_line(stash);
+	if (!line)
+	{
+		free (stash);
+		stash = NULL;
+		return (NULL);
+	}
 	stash = save_leftover(stash);
 	return (line);
 }
@@ -100,6 +92,10 @@ char	*get_next_line(int fd)
 int main(void)
 {
 	char	*line;
+
+	line = get_next_line(0);
+	printf("%s", line);
+	free(line);
 
 	line = get_next_line(0);
 	printf("%s", line);

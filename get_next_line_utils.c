@@ -58,3 +58,32 @@ char	*ft_strchr(const char *s, int c)
 		return (&str[i]);
 	return (NULL);
 }
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	i;
+	char	*str;
+
+	if (!s)
+		return (NULL);
+	if (start + len > ft_strlen(s))
+		len = ft_strlen(s) - start;
+	if (start >= ft_strlen(s))
+	{
+		str = malloc(1);
+		if (!str)
+			return (NULL);
+		str[0] = '\0';
+		return (str);
+	}
+	i = 0;
+	str = malloc(len + 1);
+	if (!str)
+		return (NULL);
+	while (i < len)
+	{
+		str[i] = s[i + start];
+		i++;
+	}
+	return (str[i] = '\0', str);
+}
