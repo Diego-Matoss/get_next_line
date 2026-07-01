@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dimatos- <dimatos-@student.42madrid.c      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/01 13:43:26 by dimatos-          #+#    #+#             */
+/*   Updated: 2026/07/01 13:43:29 by dimatos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 static char	*fill_stash(int fd, char *stash)
@@ -86,31 +98,4 @@ char	*get_next_line(int fd)
 	}
 	stash = save_leftover(stash);
 	return (line);
-}
-
-#include <stdio.h>
-int main(void)
-{
-	char	*line;
-
-	line = get_next_line(0);
-	printf("%s", line);
-	free(line);
-
-	line = get_next_line(0);
-	printf("%s", line);
-	free(line);
-
-	line = get_next_line(0);
-	printf("%s", line);
-	free(line);
-
-	line = get_next_line(0);
-	printf("%s", line);
-	free(line);
-
-	line = get_next_line(0);
-	printf("%s", line);
-	free(line);
-	return (0);
 }
