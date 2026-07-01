@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dimatos- <dimatos-@student.42madrid.c      +#+  +:+       +#+        */
+/*   By: dimatos- <dimatos-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/01 13:43:26 by dimatos-          #+#    #+#             */
-/*   Updated: 2026/07/01 13:43:29 by dimatos-         ###   ########.fr       */
+/*   Updated: 2026/07/01 14:56:37 by dimatos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,18 @@
 static char	*fill_stash(int fd, char *stash)
 {
 	char		*tmp;
-	char		buffer[BUFFER_SIZE + 1];
+	char		*buffer;
 	ssize_t		bytes_read;
 
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (free(stash), NULL);
 	bytes_read = 1;
 	while (bytes_read > 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
-		{
-			free(stash);
-			return (NULL);
-		}
+			return (free (buffer), free(stash), NULL);
 		buffer[bytes_read] = '\0';
 		if (bytes_read == 0)
 			break ;
@@ -34,11 +34,11 @@ static char	*fill_stash(int fd, char *stash)
 		stash = ft_strjoin(stash, buffer);
 		free(tmp);
 		if (!stash)
-			return (NULL);
+			return (free (buffer), NULL);
 		if (ft_strchr(stash, '\n'))
 			break ;
 	}
-	return (stash);
+	return (free (buffer), stash);
 }
 
 static char	*extract_line(char *stash)
