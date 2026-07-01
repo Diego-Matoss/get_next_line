@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dimatos- <dimatos-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/01 13:43:26 by dimatos-          #+#    #+#             */
-/*   Updated: 2026/07/01 15:05:33 by dimatos-         ###   ########.fr       */
+/*   Updated: 2026/07/01 15:07:30 by dimatos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*fill_stash(int fd, char *stash)
 {
@@ -77,25 +77,25 @@ static char	*save_leftover(char *stash)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash;
+	static char	*stash[1024];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0)
 		return (NULL);
-	stash = fill_stash(fd, stash);
-	if (!stash || stash[0] == '\0')
+	stash[fd] = fill_stash(fd, stash[fd]);
+	if (!stash[fd] || stash[fd][0] == '\0')
 	{
-		free (stash);
-		stash = NULL;
+		free (stash[fd]);
+		stash[fd] = NULL;
 		return (NULL);
 	}
-	line = extract_line(stash);
+	line = extract_line(stash[fd]);
 	if (!line)
 	{
-		free (stash);
-		stash = NULL;
+		free (stash[fd]);
+		stash[fd] = NULL;
 		return (NULL);
 	}
-	stash = save_leftover(stash);
+	stash[fd] = save_leftover(stash[fd]);
 	return (line);
 }
