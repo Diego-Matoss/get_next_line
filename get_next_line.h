@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dimatos- <dimatos-@student.42madrid.c      +#+  +:+       +#+        */
+/*   By: dimatos- <dimatos-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/01 13:43:42 by dimatos-          #+#    #+#             */
-/*   Updated: 2026/07/01 13:43:45 by dimatos-         ###   ########.fr       */
+/*   Updated: 2026/07/01 13:47:21 by dimatos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-char	get_next_line(int fd);
+char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strchr(const char *s, int c);
